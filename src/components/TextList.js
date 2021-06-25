@@ -7,35 +7,26 @@
  */
 
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const TextList = (props) => {
   return (
     <ul className = 'textList'>
-      <li>
-        <a>
-          智能客服系统-火烈云，为企业效率带来质变智能客服系统-火烈云，为企业效率带来质变
-        </a>
-      </li>
-      <li>
-        <a>
-          智能客服系统-火烈云，为企业效率带来质变智能客服系统-火烈云，为企业效率带来质变
-        </a>
-      </li>
-      <li>
-        <a>
-          智能客服系统-火烈云，为企业效率带来质变智能客服系统-火烈云，为企业效率带来质变
-        </a>
-      </li>
-      <li>
-        <a>
-          智能客服系统-火烈云，为企业效率带来质变智能客服系统-火烈云，为企业效率带来质变
-        </a>
-      </li>
-      <li>
-        <a>
-          智能客服系统-火烈云，为企业效率带来质变智能客服系统-火烈云，为企业效率带来质变
-        </a>
-      </li>
+      {
+        props.dataJSon && props.dataJSon.map((item, index) => {
+          if (index < 5) {
+            return (
+              <li key = {item.id}>
+                <Link to = ''>
+                  {item.title}
+                </Link>
+              </li>
+            )
+          }
+        })
+      }
+      
+      
     </ul>
   )
 }

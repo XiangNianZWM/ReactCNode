@@ -7,10 +7,12 @@ import { BrowserRouter as Router,  Route } from 'react-router-dom'
 // 公用组件
 // 顶部
 import Header from '../components/Header'
-// Loading
-// import Loading from '../components/Loading'
+// 底部
+import Footer from '../components/Footer'
 // 文字列表
 import TextList from '../components/TextList'
+// 活跃用户组件
+import UserList from '../components/UserList'
 
 // 引入页面组件
 import Index from './Index'
@@ -26,14 +28,14 @@ import Login from './Login'
 // 引入redux, store
 import store from '../store'
 import {
-  searchStatusAction
+  // 控制搜索栏是否显示
+  searchStatusAction,
+  // 获取首页列表各项数据
+  getHomeData,
+  // 修改页码
+  changePageIndexAction
 } from '../store/actionCreates'
 
-// 引入api
-import {
-  // 首页列表请求
-  getTopics
-} from '../server/api'
 
 class App extends Component {
   constructor(props) {
@@ -46,6 +48,7 @@ class App extends Component {
     this.storeChange = this.storeChange.bind(this)
     store.subscribe(this.storeChange)
     this.state = {
+      tabIndex: 0,
       tabList: [
         {
           title: '全部',
@@ -69,13 +72,13 @@ class App extends Component {
         },
         {
           title: '客户端测试',
-          tab: ''
+          tab: 'dev'
         }
       ]
     }
   }
   render() {
-    return ( 
+    return (
       <div className='main'>
         <Router>
           <Header
@@ -90,7 +93,9 @@ class App extends Component {
                     {
                       this.state.tabList.map((item, index) => {
                         return (
-                          <li key = { index }>
+                          <li className={this.state.tabIndex === index ? 'cur' : ''} key = { index } onClick = {() => {
+                            this.changeTabIndex(index, item)
+                          }}>
                             {item.title}
                           </li>
                         )
@@ -104,6 +109,7 @@ class App extends Component {
                   <Route path='/apipage' component={ApiPage} />
                   <Route path='/about' component={About} />
                   <Route path='/login' component={Login} />
+                  
                 </div>
               </div>
               <div className = 'fr'>
@@ -113,56 +119,9 @@ class App extends Component {
                     活跃用户
                   </div>
                   <div className = 'con'>
-                    <ul>
-                      <li>
-                        <span>
-                          <img src= 'https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                      <li>
-                        <span>
-                          <img src='https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                      <li>
-                        <span>
-                          <img src='https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                      <li>
-                        <span>
-                          <img src='https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                      <li>
-                        <span>
-                          <img src='https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                      <li>
-                        <span>
-                          <img src='https://avatars.githubusercontent.com/u/2842176?v=4&s=120' />
-                        </span>
-                        <p>
-                          我是测试每次
-                        </p>
-                      </li>
-                    </ul>
+                    <UserList 
+                      dataJSon={this.state.userIndexData}
+                    />
                   </div>
                 </div>
                 <div className = 'box hotTopic'>
@@ -170,7 +129,9 @@ class App extends Component {
                     <i className='iconfont icon-huati hot'></i> 热门话题
                   </div>
                   <div className = 'con'>
-                    <TextList />
+                    <TextList
+                      dataJSon={this.state.hotIndexData}
+                     />
                   </div>
                 </div>
                 <div className='box zeroTopic'>
@@ -178,7 +139,9 @@ class App extends Component {
                     <i className='iconfont icon-huati cold'></i> 无人回复话题
                   </div>
                   <div className='con'>
-                    <TextList />
+                    <TextList 
+                      dataJSon={this.state.coldIndexData}
+                    />
                   </div>
                 </div>
                 <div className = 'box clineQr'>
@@ -195,43 +158,63 @@ class App extends Component {
             </div>
           </div>
         </Router>
+        {/* 底部 */}
+        <Footer />
       </div>
      );
   }
 
   // 组件挂载之前
   componentDidMount () {
-    this.getTopicsData(
-      1,
-      'all',
-      20,
-      true
-    )
+    // 优先获取首页数据
+    this.getData({
+      page: 1,
+      tab: 'all',
+      limit: 10,
+      mark: true
+    })
   }
 
   // 组件发生更新
   storeChange() {
     this.setState(store.getState())
   }
+  
   // 修改顶部搜索框
   setTopSearch() {
     const action = searchStatusAction(!this.state.searchStatus)
     store.dispatch(action)
   }
+
+  // 重新获取tab数据
+  changeTabIndex(index, item) {
+    this.setState({
+      tabIndex: index
+    })
+    setTimeout(() => {
+      this.changePageIndexData(1)
+      this.getData({
+        page: this.state.pageIndex,
+        tab: item.tab,
+        limit: 20,
+        mark: true
+      })
+    }, 0);
+    
+  }
+
+  // 修改页码
+  changePageIndexData (index) {
+    console.log(this.state.pageIndex)
+    const action = changePageIndexAction(index)
+    store.dispatch(action)
+  }
+
   // 获取数据
-  async getTopicsData (
-    page,
-    tab,
-    limit,
-    mdrender
-  ) {
-    const res = await getTopics(
-      page,
-      tab,
-      limit,
-      mdrender
-    )
-    console.log(res)
+  // 从actionCreate页面拿到获取数据的getHomeData中间件函数
+  getData(props) {
+    const action = getHomeData(props)
+    store.dispatch(action)
   }
 }
  

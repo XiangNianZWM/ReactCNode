@@ -216,26 +216,37 @@ a {
 .indexImgList {
   ul {
     li.tops {
-      .tag {
-          background: #007fff !important;
-          color: #fff !important
+      .txtDiv {
+        h4 {
+          .tag {
+            background: #007fff;
+            color: #fff !important
+          }
+        }
       }
+      
     }
-    li.goods {
-      .tag {
-          background: #007fff !important;
-          color: #fff !important
+    li {
+      .txtDiv {
+        h4.goods {
+          .tag {
+              background: #ffc400;
+              color: #fff
+          }
+        }
       }
+      
     }
     li {
       margin-bottom: 15px;
       padding-bottom: 15px;
       border-bottom: 1px solid #e3e3e3;
       display: flex;
-      
+      width: 100%;
       .txtDiv {
-        margin-right: auto;
         max-width: 100%;
+        // margin-right: auto;
+        flex: 1 1 auto !important; 
         h4 {
           display: flex;
           align-items: center;
@@ -272,21 +283,28 @@ a {
         }
         .title {
           margin: 20px 0 15px 0;
-          color: #1d2129;
-          font-weight: bold;
-          font-size: 16px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          width: 100%;
-          height: 24px;
+          a {
+            color: #1d2129;
+            font-weight: bold;
+            font-size: 16px;
+            word-break: break-all;
+            width: 100%;
+            display:-webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            // display: block;
+            // width: 100%;
+            height: 24px;
+          }
         }
         h6 {
           font-weight: normal;
           display: flex;
           align-items: center;
           span {
-            margin: 0 20px;
+            margin: 0 10px;
             display: flex;
             align-items: center;
             font-size: 12px;
@@ -300,19 +318,82 @@ a {
             &:first-child {
               margin-left: 0
             }
+            &:hover {
+              color: #007fff 
+            }
           }
         }
       }
       .imgDiv {
         width: 140px;
         height: 100px;
-        flex-shrink: 0;
+        flex: 0 0 auto !important;
+        margin-left: 20px;
         img {
           width: 100%;
           display: block;
           height: 100%;
           object-fit: cover;
         }
+      }
+    }
+  }
+}
+.footer {
+  display: flex;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(100, 100, 100, .1);
+  .w1440 {
+    padding: 20px 0 12px 0;
+    p {
+      color: #6c757d;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 8px;
+      i {
+        margin-left: 10px
+      }
+    }
+  }
+}
+
+// 分页组件
+.paging {
+  .con { 
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #e3e3e3;
+    border-left: 1px solid #e3e3e3;
+    width: 268px;
+    ul {
+      display: flex;
+      align-items: center;
+      li {
+        padding: 8px 14px;
+        &.cur {
+          background: #f1f4f7;
+          color: #0a43e4
+        }
+      }
+    }
+    li, span {
+      border-right: 1px solid #e3e3e3;
+      border-bottom: 1px solid #e3e3e3;
+      padding: 8px 12px;
+      color: #778087;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:hover {
+        background: #f1f4f7;
+      }
+    }
+    span.lastItem, span.firstItem {
+      padding: 2px 8px;
+      i {
+        font-size: 28px;
+        padding-top: 1px;
+        display: block;
       }
     }
   }
