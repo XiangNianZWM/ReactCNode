@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-22 14:15:48
- * @LastEditTime: 2021-06-23 17:34:37
+ * @LastEditTime: 2021-07-07 16:25:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \mapcoded:\study\React项目\react_cnode\src\server\index.js
@@ -10,7 +10,9 @@ import axios from 'axios'
 // 引入store
 import store from '../store'
 import {
-  loadingStatusAction
+  loadingStatusAction,
+  changeTipStatusAction,
+  changeTipTextAction
 } from '../store/actionCreates'
 // 是否允许携带验证
 axios.defaults.withCredentials = true
@@ -49,7 +51,10 @@ server.interceptors.response.use(res => {
   store.dispatch(action)
   return res.data
 }, err => {
-  console.log('数据响应发生错误')
+  const actionStatus = changeTipStatusAction(true)
+  const actionText = changeTipTextAction(JSON.parse(err.request.responseText).error_msg)
+  store.dispatch(actionStatus)
+  store.dispatch(actionText)
   return Promise.reject(err)
 })
 

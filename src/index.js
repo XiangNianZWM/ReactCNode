@@ -3,9 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './scss/style.scss'
 import App from './pages/App';
+// react-redux
+import { Provider } from 'react-redux'
+import store from './store'
+
+const Root = (
+  <Provider store = { store }>
+    <App />
+  </Provider>
+)
 
 ReactDOM.render(
-    <App />,
+  Root,
   document.getElementById('root')
 );
 
